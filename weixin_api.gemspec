@@ -1,13 +1,13 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'kehutong_weixin_api/version'
+require 'weixin_api/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "kehutong_weixin_api"
-  spec.version       = KehutongWeixinApi::VERSION
-  spec.authors       = ["王璞"]
-  spec.email         = ["wangpu2123@sina.com"]
+  spec.name          = "weixin_api"
+  spec.version       = WeixinApi::VERSION
+  spec.authors       = ["Moode"]
+  spec.email         = ["kehutong@moode.com"]
   spec.summary       = %q{TODO: Write a short summary. Required.}
   spec.description   = %q{TODO: Write a longer description. Optional.}
   spec.homepage      = ""

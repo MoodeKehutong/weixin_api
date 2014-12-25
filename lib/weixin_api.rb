@@ -1,4 +1,4 @@
-require "kehutong_weixin_api/version"
+require "weixin_api/version"
 require "rest-client"
 require "multi_json"
 
