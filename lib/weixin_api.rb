@@ -46,6 +46,10 @@ module Kehutong
       _generate_qrcode(scene_id, 'QR_LIMIT_SCENE')
     end
 
+    def fetch_user(open_id)
+      _fetch_user_info(open_id)
+    end
+
     private
 
     def _validate?(params)
