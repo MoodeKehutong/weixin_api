@@ -9,6 +9,7 @@ module Kehutong
     @@access_token = nil
 
     ACCESS_TOKEN_ERRCODES = [40001, 40014, 41001, 42001]
+    OPENID_ERRCODES = [40003]
 
     def initialize(weixin_info = {})
       @app_id = weixin_info[:app_id]
@@ -87,15 +88,30 @@ module Kehutong
       }
     end
 
-    def request_to_weixin
+    def request_to_weixin(&block)
       response_json = MultiJson.load(yield)
-      if ACCESS_TOKEN_ERRCODES.include?(response_json['errcode'])
-        _fetch_access_token
-        MultiJson.load(yield) if @@access_token
-      else
-        response_json
+      errcode = response_json['errcode']
+      return response_json unless errcode
+      type = find_error_type(errcode)
+      return send("process_#{type}_errors", &block) if type
+      response_json
+    end
+
+    def find_error_type(errcode)
+      ['access_token', 'openid'].find do |item|
+        self.class.const_get("#{item}_errcodes".upcase).include?(errcode)
       end
     end
+
+    def process_access_token_errors(&block)
+      _fetch_access_token
+      request_to_weixin(&block) if @@access_token
+    end
+
+    def process_openid_errors
+      nil
+    end
+
   end
 end
 
