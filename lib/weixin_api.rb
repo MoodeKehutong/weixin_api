@@ -50,6 +50,10 @@ module Kehutong
       _fetch_user_info(open_id)
     end
 
+    def fetch_open_id(code)
+      _oauth_get_open_id(code)
+    end
+
     private
 
     def _validate?(params)
