@@ -55,6 +55,23 @@ module Kehutong
       _oauth_get_open_id(code)
     end
 
+    def send_text_service_message_to(open_id, content)
+      message = {
+          'touser' => open_id,
+          'msgtype' => 'text',
+          'text' => {
+              'content' => content
+          }
+      }
+      send_service_message(message)
+    end
+
+    def send_service_message(message)
+      request_to_weixin do
+        RestClient.post("https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=#{@@access_token}", message.to_json, :content_type => :json)
+      end
+    end
+
     private
 
     def _validate?(params)
