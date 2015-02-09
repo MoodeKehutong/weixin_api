@@ -30,3 +30,21 @@
 - 传入自定义的scene_id，返回生成二维码的ticket、expire_seconds和url。
 - 通过https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=TICKET（将TICKET替换为所生成二维码的ticket）获取二维码图片
 - 永久二维码最多只能有100000个，scene_id的值只能为1--100000
+
+### 发送客服消息  send_service_message(message)
+- 方法参数为微信官方api接口中的数据，例如：
+        
+        {
+            "touser":"OPENID",
+            "msgtype":"text",
+            "text":
+            {
+                 "content":"Hello World"
+            }
+        }
+- 该方法的目的是给本gem提供发送客服接口的公共方法，使用者也可以根据此接口在项目中进行进一步定制
+- 后续更新中会提供发送文本、图片等客服信息的接口
+
+### 发送文本客服消息  send_text_service_message_to(open_id, content)
+- 传入目标用户的open_id和要发送的内容，成功后返回{"errcode"=>0, "errmsg"=>"ok"}
+- 此接口只能向已关注公众账号并且在48小时内与公众账号互动过的用户发送信息
