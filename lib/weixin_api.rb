@@ -72,6 +72,12 @@ module Kehutong
       end
     end
 
+    def send_template_news(message)
+      request_to_weixin do
+        RestClient.post("https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=#{@@access_token}", message.to_json, :content_type => :json)
+      end
+    end
+
     private
 
     def _validate?(params)
