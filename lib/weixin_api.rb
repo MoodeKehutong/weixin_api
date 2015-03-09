@@ -7,6 +7,8 @@ module Kehutong
   class WeixinApi
 
     @@access_token = nil
+    @@jsapi_ticket = nil
+    @@jsapi_ticket_timestamp = nil
 
     ACCESS_TOKEN_ERRCODES = [40001, 40014, 41001, 42001]
     OPENID_ERRCODES = [40003]
@@ -75,6 +77,26 @@ module Kehutong
     def send_template_message(message)
       request_to_weixin do
         RestClient.post("https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=#{@@access_token}", message.to_json, :content_type => :json)
+      end
+    end
+
+    def get_jsapi_ticket
+      if @@jsapi_ticket && !jsapi_ticket_expired?
+        @@jsapi_ticket
+      else
+        response_json = request_to_weixin do
+          RestClient.get("https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=#{@@access_token}&type=jsapi")
+        end
+        @@jsapi_ticket_timestamp = Time.now.to_i
+        @@jsapi_ticket = response_json['ticket']
+      end
+    end
+
+    def jsapi_ticket_expired?
+      if @@jsapi_ticket_timestamp
+        Time.now.to_i - @@jsapi_ticket_timestamp > 7200
+      else
+        true
       end
     end
 
