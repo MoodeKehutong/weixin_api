@@ -101,12 +101,12 @@ module Kehutong
     end
 
     def download_image(media_id, file_path)
-      image_base64 = request_to_weixin do
+      image_binary = request_to_weixin do
         RestClient.get("http://file.api.weixin.qq.com/cgi-bin/media/get?access_token=#{@@access_token}&media_id=#{media_id}")
       end
-      if image_base64.class == "String" && image_base64.length > 0
+      if image_binary.class == String && image_binary.length > 0
         File.open("#{file_path}/#{media_id}.jpg", "wb") do |image|
-          image.write(Base64.decode64(image_base64))
+          image.write(image_binary)
         end
       end
     end
@@ -145,7 +145,12 @@ module Kehutong
     end
 
     def request_to_weixin(&block)
-      response_json = MultiJson.load(yield)
+      response = yield
+      begin
+        response_json = MultiJson.load(response)
+      rescue MultiJson::ParseError => exception
+        return response
+      end
       errcode = response_json['errcode']
       return response_json unless errcode
       type = find_error_type(errcode)
