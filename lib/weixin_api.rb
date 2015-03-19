@@ -100,6 +100,17 @@ module Kehutong
       end
     end
 
+    def download_image(media_id, file_path)
+      image_base64 = request_to_weixin do
+        RestClient.get("http://file.api.weixin.qq.com/cgi-bin/media/get?access_token=#{@@access_token}&media_id=#{media_id}")
+      end
+      if image_base64.class == "String" && image_base64.length > 0
+        File.open("#{file_path}/#{media_id}.jpg", "wb") do |image|
+          image.write(Base64.decode64(image_base64))
+        end
+      end
+    end
+
     private
 
     def _validate?(params)
